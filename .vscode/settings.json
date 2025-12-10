@@ -3,5 +3,8 @@
     "source.fixAll": "explicit",
     "source.organizeImports": "explicit",
     "source.sortMembers": "explicit"
-  }
+  },
+  "powerquery.client.additionalSymbolsDirectories": [
+    "c:/Users/ADVAN/Downloads/AAS_/perpustakaan_mobile/.vscode/excel-pq-symbols"
+  ]
 }

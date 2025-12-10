@@ -1,50 +1,138 @@
-# Welcome to your Expo app 👋
+# Perpustakaan Mobile App 📚
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Aplikasi mobile perpustakaan menggunakan **React Native Expo**, **React Native Paper**, dan **Lucide React Native**.
 
-## Get started
+## ✨ Fitur
 
-1. Install dependencies
+- 🔐 **Login/Register** - Sistem autentikasi sederhana
+- 📚 **Daftar Buku** - Tampilan semua buku dengan grid layout
+- 📖 **Detail Buku** - Informasi lengkap tentang buku
+- ⭐ **Favorit Buku** - Simpan buku favorit
+- 👤 **Profil Pengguna** - Kelola profil dengan AsyncStorage
+- 📊 **Dashboard Stats** - Statistik peminjaman dan favorit
+- 🎨 **Desain Modern** - UI dengan React Native Paper
 
-   ```bash
-   npm install
-   ```
+## 🚀 Quick Start
 
-2. Start the app
+### Prerequisites
 
-   ```bash
-   npx expo start
-   ```
+- Node.js 18+
+- Expo CLI atau Expo Go app
 
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+### Instalasi
 
 ```bash
-npm run reset-project
+# Install dependencies
+npm install
+
+# Jalankan aplikasi
+npm start
+# atau
+npx expo start
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Kemudian scan QR code dengan Expo Go app (Android/iOS) atau tekan:
+- `a` untuk Android emulator
+- `i` untuk iOS simulator
+- `w` untuk web browser
 
-## Learn more
+## 📱 Build APK
 
-To learn more about developing your project with Expo, look at the following resources:
+### Development Build
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```bash
+# Install EAS CLI
+npm install -g eas-cli
 
-## Join the community
+# Login ke Expo
+eas login
 
-Join our community of developers creating universal apps.
+# Build APK
+eas build --platform android --profile preview
+```
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+### Production Build
+
+```bash
+eas build --platform android --profile production
+```
+
+## 🔑 Akun Demo
+
+```
+Email: john@example.com
+Password: password123
+```
+
+atau
+
+```
+Email: jane@example.com
+Password: password123
+```
+
+## 📂 Struktur Data
+
+- **Buku:** `data/books.json` - 10 buku dummy
+- **User:** `data/users.json` - 3 user dummy
+- **Profile:** AsyncStorage - Local storage
+- **Favorit:** AsyncStorage - Local storage
+- **Peminjaman:** AsyncStorage - Local storage
+
+## 🛠 Teknologi
+
+- **Expo** - React Native framework
+- **React Native Paper** - Material Design components
+- **Lucide React Native** - Beautiful icons
+- **TypeScript** - Type safety
+- **Expo Router** - File-based routing
+- **AsyncStorage** - Local storage
+
+## 🎨 Desain
+
+Aplikasi menggunakan:
+- **React Native Paper** untuk UI components (Cards, Buttons, TextInput, dll)
+- **Lucide React Native** untuk icons (BookOpen, Heart, User, dll)
+- Material Design 3 theme
+- Color scheme: Blue (#3b82f6) sebagai primary color
+
+## 📝 Catatan
+
+- Aplikasi menggunakan data dummy dari JSON
+- Tidak ada koneksi database
+- Semua data disimpan di AsyncStorage (local storage)
+- Untuk production, perlu integrasi dengan backend API
+
+## 📁 Struktur Project
+
+```
+perpustakaan_mobile/
+├── app/
+│   ├── _layout.tsx          # Root layout dengan PaperProvider
+│   ├── login.tsx            # Login screen
+│   ├── (tabs)/
+│   │   ├── _layout.tsx      # Tab navigation
+│   │   ├── index.tsx        # Home screen
+│   │   ├── favorites.tsx    # Favorites screen
+│   │   └── profile.tsx      # Profile screen
+│   └── book/
+│       └── [id].tsx         # Book detail screen
+├── data/
+│   ├── books.json           # Data buku
+│   └── users.json           # Data user
+├── types/
+│   └── index.ts             # TypeScript types
+├── utils/
+│   ├── data.ts              # Helper functions untuk data
+│   └── storage.ts           # AsyncStorage utilities
+└── constants/
+    └── paper-theme.ts       # React Native Paper theme
+```
+
+## 🤝 Kontribusi
+
+Silakan buat issue atau pull request jika ada yang ingin ditambahkan atau diperbaiki.
+
+## 📄 License
+
+MIT

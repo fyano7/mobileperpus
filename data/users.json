@@ -1,0 +1,33 @@
+[
+  {
+    "id": 1,
+    "name": "John Doe",
+    "email": "john@example.com",
+    "password": "password123",
+    "role": "siswa",
+    "phone": "081234567890",
+    "address": "Jl. Contoh No. 123"
+  },
+  {
+    "id": 2,
+    "name": "Jane Smith",
+    "email": "jane@example.com",
+    "password": "password123",
+    "role": "siswa",
+    "phone": "081234567891",
+    "address": "Jl. Contoh No. 456"
+  },
+  {
+    "id": 3,
+    "name": "Admin User",
+    "email": "admin@perpustakaan.com",
+    "password": "admin123",
+    "role": "admin",
+    "phone": "081234567892",
+    "address": "Jl. Admin No. 1"
+  }
+]
+
+
+
+
