@@ -3,6 +3,8 @@ import {
   View,
   ScrollView,
   Alert,
+  TouchableOpacity,
+  Platform,
 } from 'react-native';
 import {
   Text,
@@ -13,6 +15,9 @@ import {
   Divider,
 } from 'react-native-paper';
 import {useRouter} from 'expo-router';
+import {Image} from 'expo-image';
+import * as ImagePicker from 'expo-image-picker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {storage} from '@/utils/storage';
 import {User} from '@/types';
 import {useTheme} from '@/contexts/ThemeContext';
@@ -24,6 +29,7 @@ import {
   Settings,
   LogOut,
   ChevronRight,
+  Camera,
 } from 'lucide-react-native';
 
 export default function ProfileScreen() {
@@ -39,7 +45,22 @@ export default function ProfileScreen() {
 
   useEffect(() => {
     loadUserData();
+    requestPermissions();
   }, []);
+
+  const requestPermissions = async () => {
+    if (Platform.OS !== 'web') {
+      const {status: cameraStatus} = await ImagePicker.requestCameraPermissionsAsync();
+      const {status: mediaLibraryStatus} = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      
+      if (cameraStatus !== 'granted' || mediaLibraryStatus !== 'granted') {
+        Alert.alert(
+          'Izin Diperlukan',
+          'Aplikasi memerlukan izin untuk mengakses kamera dan galeri foto.',
+        );
+      }
+    }
+  };
 
   const loadUserData = async () => {
     // Get user from local storage (data sesuai email yang diinput saat login/register)
@@ -58,6 +79,75 @@ export default function ProfileScreen() {
         totalFavorites: favorites.length,
         activeBorrowings,
       });
+    }
+  };
+
+  const showImagePickerOptions = () => {
+    Alert.alert(
+      'Pilih Foto Profil',
+      'Pilih sumber foto untuk profil Anda',
+      [
+        {
+          text: 'Kamera',
+          onPress: () => handlePickImage('camera'),
+        },
+        {
+          text: 'Galeri',
+          onPress: () => handlePickImage('gallery'),
+        },
+        {
+          text: 'Batal',
+          style: 'cancel',
+        },
+      ],
+      {cancelable: true},
+    );
+  };
+
+  const handlePickImage = async (source: 'camera' | 'gallery') => {
+    try {
+      let result;
+      
+      if (source === 'camera') {
+        result = await ImagePicker.launchCameraAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+          allowsEditing: true,
+          aspect: [1, 1],
+          quality: 0.8,
+        });
+      } else {
+        result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+          allowsEditing: true,
+          aspect: [1, 1],
+          quality: 0.8,
+        });
+      }
+
+      if (!result.canceled && result.assets && result.assets.length > 0) {
+        const imageUri = result.assets[0].uri;
+        
+        if (user) {
+          const updatedUser = {
+            ...user,
+            profile_image: imageUri,
+          };
+          
+          await storage.saveUser(updatedUser);
+          setUser(updatedUser);
+          
+          // Update user in all users list
+          const allUsers = await storage.getAllUsers();
+          const userIndex = allUsers.findIndex(u => u.email === user.email);
+          if (userIndex !== -1) {
+            allUsers[userIndex] = updatedUser;
+            await AsyncStorage.setItem('@perpustakaan:all_users', JSON.stringify(allUsers));
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error picking image:', error);
+      Alert.alert('Error', 'Gagal memilih gambar. Silakan coba lagi.');
     }
   };
 
@@ -107,15 +197,37 @@ export default function ProfileScreen() {
       <View
         className={`pt-12 pb-8 px-6 ${isDark ? 'bg-gradient-to-br from-blue-900 to-indigo-900' : 'bg-gradient-to-br from-blue-500 to-indigo-600'}`}>
         <View className="items-center">
-          <View className="bg-white/20 backdrop-blur-sm p-1 rounded-full mb-4">
-            <Avatar.Text
-              size={100}
-              label={getInitials(user.name)}
-              className={isDark ? 'bg-blue-800' : 'bg-white'}
-              style={{
-                backgroundColor: isDark ? '#1e3a8a' : '#ffffff',
-              }}
-            />
+          <View className="bg-white/20 backdrop-blur-sm p-1 rounded-full mb-4 relative">
+            <TouchableOpacity
+              onPress={showImagePickerOptions}
+              activeOpacity={0.8}>
+              {user.profile_image ? (
+                <Image
+                  source={{uri: user.profile_image}}
+                  style={{
+                    width: 100,
+                    height: 100,
+                    borderRadius: 50,
+                  }}
+                  contentFit="cover"
+                />
+              ) : (
+                <Avatar.Text
+                  size={100}
+                  label={getInitials(user.name)}
+                  className={isDark ? 'bg-blue-800' : 'bg-white'}
+                  style={{
+                    backgroundColor: isDark ? '#1e3a8a' : '#ffffff',
+                  }}
+                />
+              )}
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={showImagePickerOptions}
+              className="absolute bottom-0 right-0 bg-blue-600 p-2 rounded-full border-2 border-white shadow-lg"
+              activeOpacity={0.8}>
+              <Camera size={20} color="#fff" />
+            </TouchableOpacity>
           </View>
           <Text
             variant="headlineSmall"
